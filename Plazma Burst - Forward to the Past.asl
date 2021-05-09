@@ -5,6 +5,7 @@
 state("flashplayer11_7r700_224_win_sa")
 {
 	int levelTimesEight : 0x0091BA44, 0x0, 0x8, 0xC, 0x5C, 0xFFC, 0x18, 0x7C;
+	int grenadesOnLevelOne : 0x0093B1EC, 0x2B8, 0xC, 0x8C, 0x478, 0x94, 0x50, 0x60;
 }
 
 startup
@@ -12,19 +13,17 @@ startup
 	vars.TimerModel = new TimerModel { CurrentState = timer }; // For resetting the timer when the game is exited.
 }
 
-update
+start
 {
-	// TODO: Start the timer when one of the difficulty buttons is clicked.
-
-	// new and current unfortunately both start at 8.
-	// print(old.levelTimesEight.ToString() + ", " + current.levelTimesEight.ToString());
+	// TODO: Start the timer when one of the difficulty buttons is clicked on the first level.
+	// print(current.grenadesOnLevelOne.ToString());
+	if (old.grenadesOnLevelOne < 0 && current.grenadesOnLevelOne == 24) { // This requires restarting the exe.
+		return true;
+	}
 }
 
 split
 {
-	// print("current.levelTimesEight: " + current.levelTimesEight.ToString());
-	// print("old.levelTimesEight: " + old.levelTimesEight.ToString());
-
 	// On game resets, old.levelTimesEight is the first level.
 	// On game restarts, old.levelTimesEight is the last level that is still unlocked.
 	if (current.levelTimesEight != 0 && old.levelTimesEight != 0 && // When the game is started/reset, levelTimesEight is 0 for both current and new.
